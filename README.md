@@ -36,3 +36,5 @@ git init
 git add .
 git status
 git commit -m "Commiting"
+git remote add origin <>
+git push -u origin master
