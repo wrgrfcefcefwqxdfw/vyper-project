@@ -1,0 +1,75 @@
+$ mox test --gas-profile > gas.txt
+
+============================= test session starts =============================
+platform win32 -- Python 3.11.2, pytest-8.3.5, pluggy-1.5.0
+rootdir: C:\Users\nugge\Desktop\vyper-proj\mox-buy-me-a-coffee
+configfile: pyproject.toml
+plugins: hypothesis-6.130.5, cov-6.0.0, xdist-3.6.1, titanoboa-0.2.6
+collected 8 items
+
+tests\unit\test_unit_coffee.py ........                                  [100%]                                                                                                                                      
+                                                                                                                                      
++------------------------------------------------------------------------------------------------------------------------------------+
+| Contract                                             | Computation                    | Count | Mean | Medi� | Std� | Min   | Max  |
+|------------------------------------------------------+--------------------------------+-------+------+-------+------+-------+------|
+| Path: src\mocks                                      |                                |       |      |       |      |       |      |
+| Name: mock_v3_aggregator.vy                          |                                |       |      |       |      |       |      |
+| Address: 0xC6Acb7D16D51f72eAA659668F30A40d87E2E0551  |                                |       |      |       |      |       |      |
+|                                                      | <none>                         | 12    | 3    | 3     | 0    | 3     | 3    |
+|------------------------------------------------------+--------------------------------+-------+------+-------+------+-------+------|
+| Path: src                                            |                                |       |      |       |      |       |      |
+| Name: buy_me_a_coffee.vy                             |                                |       |      |       |      |       |      |
+| Address: 0x3d06E92f20305D9a2D71a1D479E9EE22690Ae7E4  |                                |       |      |       |      |       |      |
+|                                                      | fund                           | 11    | 495� | 45067 | 9870 | 45067 | 694� |
+|                                                      | get_eth_to_usd_rate            | 1     | 2955 | 2955  | 0    | 2955  | 2955 |
+|                                                      | <none>                         | 9     | 5    | 3     | 6    | 3     | 21   |
+|                                                      | withdraw                       | 2     | -11� | -117� | 124� | -206� | -29� |
++------------------------------------------------------------------------------------------------------------------------------------+
+                                                                                                                                      
+                                                                                                                                      
++------------------------------------------------------------------------------------------------------------------------------------+
+| Contract                                        | Computation                                                                |||||||
+|-------------------------------------------------+----------------------------------------------------------------------------++++++|
+| Path: src                                       |                                                                            |||||||
+| Name: buy_me_a_coffee.vy                        |                                                                            |||||||
+| Address: 0x3d06E92f20305D9a2D71a1D479E9EE22690� |                                                                            |||||||
+| ----------------------------------------------� | -------------------------------------------------------------------------- |||||||
+| src\get_price_module.vy:_get_eth_to_usd_rate    |  14: price: int256 = staticcall price_feed.latestAnswer()                  |||||||
+| src\get_price_module.vy:_get_eth_to_usd_rate    |  16: eth_amount_in_usd: uint256 = (eth_price * eth_amount) // PRECISION    |||||||
+| src\get_price_module.vy:_get_eth_to_usd_rate    |  15: eth_price: uint256 = (convert(price, uint256)) * (10**10)             |||||||
+| src\get_price_module.vy:_get_eth_to_usd_rate    |  17: return eth_amount_in_usd # 18 0's, 18 decimal places                  |||||||
+| ----------------------------------------------� | -------------------------------------------------------------------------- |||||||
+| src\buy_me_a_coffee.vy:get_eth_to_usd_rate      |  73: return get_price_module._get_eth_to_usd_rate(PRICE_FEED ,eth_amount)  |||||||
+| src\buy_me_a_coffee.vy:get_eth_to_usd_rate      |  71: def get_eth_to_usd_rate(eth_amount: uint256) -> uint256:              |||||||
+| ----------------------------------------------� | -------------------------------------------------------------------------- |||||||
+| src\buy_me_a_coffee.vy:                         |  22: PRICE_FEED: public(immutable(AggregatorV3Interface)) # 0x694AA176935� |||||||
+| src\buy_me_a_coffee.vy:                         |  23: OWNER: public(immutable(address))                                     |||||||
+| src\buy_me_a_coffee.vy:                         |  26: funders: public(DynArray)                                             |||||||
+| src\buy_me_a_coffee.vy:                         |  27: funder_to_amount_funded: public(HashMap)                              |||||||
+| ----------------------------------------------� | -------------------------------------------------------------------------- |||||||
+| src\buy_me_a_coffee.vy:MINIMUM_USD              |  21: MINIMUM_USD: public(constant(uint256)) = as_wei_value(5, "ether")     |||||||
+| ----------------------------------------------� | -------------------------------------------------------------------------- |||||||
+| src\buy_me_a_coffee.vy:_fund                    |  50: self.funders.append(msg.sender)                                       |||||||
+| src\buy_me_a_coffee.vy:_fund                    |  51: self.funder_to_amount_funded += msg.value                             |||||||
+| src\buy_me_a_coffee.vy:_fund                    |  48: usd_value_of_eth: uint256 = get_price_module._get_eth_to_usd_rate(PR� |||||||
+| src\buy_me_a_coffee.vy:_fund                    |  49: assert usd_value_of_eth >= MINIMUM_USD, "You must spend more ETH!"    |||||||
+| ----------------------------------------------� | -------------------------------------------------------------------------- |||||||
+| src\buy_me_a_coffee.vy:fund                     |  38: self._fund()                                                          |||||||
+| src\buy_me_a_coffee.vy:fund                     |  37: def fund():                                                           |||||||
+| ----------------------------------------------� | -------------------------------------------------------------------------- |||||||
+| src\buy_me_a_coffee.vy:withdraw                 |  61: raw_call(OWNER, b"", value = self.balance)                            |||||||
+| src\buy_me_a_coffee.vy:withdraw                 |  55: def withdraw():                                                       |||||||
+| src\buy_me_a_coffee.vy:withdraw                 |  64: for funder: address in self.funders:                                  |||||||
+| src\buy_me_a_coffee.vy:withdraw                 |  60: assert msg.sender == OWNER, "Not the contract owner!"                 |||||||
+| src\buy_me_a_coffee.vy:withdraw                 |  66: self.funders = []                                                     |||||||
+| src\buy_me_a_coffee.vy:withdraw                 |  65: self.funder_to_amount_funded = 0                                      |||||||
+|-------------------------------------------------+----------------------------------------------------------------------------++++++|
+| Path: src\mocks                                 |                                                                            |||||||
+| Name: mock_v3_aggregator.vy                     |                                                                            |||||||
+| Address: 0xC6Acb7D16D51f72eAA659668F30A40d87E2� |                                                                            |||||||
+| ----------------------------------------------� | -------------------------------------------------------------------------- |||||||
+| src\mocks\mock_v3_aggregator.vy:                |   6: latestAnswer: public(int256)                                          |||||||
++------------------------------------------------------------------------------------------------------------------------------------+
+
+
+============================== 8 passed in 0.57s ==============================

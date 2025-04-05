@@ -1,0 +1,26 @@
+[project]
+src = "src"
+out = "out"
+dot_env = ".env"
+
+[networks.sepolia]
+url = "alchemy rpc url"
+save_to_db = false
+default_account_name = "default"
+explorer_uri = "https://eth-sepolia.blockscout.com/"
+explorer_type = "blockscout"
+
+# Top level way to do the default
+# [networks.contracts.price_feed]
+# deployer_script = "script/deploy_mockpricefeed.py"
+
+[networks.pyevm.contracts.price_feed]
+# Running mox run deploy will use pyevm by default
+# On pyevm it needs a deployer script to know which script to use
+deployer_script = "script/deploy_mockpricefeed.py"
+
+[networks.sepolia.contracts.price_feed]
+address = "0x694AA1769357215DE4FAC081bf1f309aDC325306"
+# Moccasin will detect if on sepolia or not. If not it will run deployer script. If it is, it will use the address.
+deployer_script = "script/deploy_mockpricefeed.py"
+
