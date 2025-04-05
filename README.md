@@ -38,3 +38,6 @@ git status
 git commit -m "Commiting"
 git remote add origin <>
 git push -u origin master
+git reflog # this sees what went the logs
+git reset --hard HEAD@{1} # this helps to reset(rollback)
+git rebase --continue # to stop the rebase
