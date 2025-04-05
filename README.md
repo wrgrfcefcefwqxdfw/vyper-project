@@ -29,3 +29,10 @@ There are many types of tests:
     Forked (Staging): Test your code in a production-like environment, but with a forked version of the blockchain.
     Fuzz: Test your code with random inputs.
     Formal Verification: Prove that your code is correct.
+
+# Git commands
+
+git init
+git add .
+git status
+git commit -m "Commiting"
